@@ -1,6 +1,7 @@
 package fr.ubx.poo.ubomb.view;
 
 import fr.ubx.poo.ubomb.game.Direction;
+import fr.ubx.poo.ubomb.game.Position;
 import javafx.scene.image.Image;
 
 public class ImageResourceFactory {
@@ -13,10 +14,12 @@ public class ImageResourceFactory {
         return ImageResource.valueOf("PLAYER_" + direction);
     }
 
+    public static ImageResource getPrincess() {
+        return ImageResource.valueOf("PRINCESS");
+    }
     public static ImageResource getMonster(Direction direction) {
         return ImageResource.valueOf("MONSTER_" + direction);
     }
-
     public static ImageResource getBomb(int i) {
         if (i < 0 || i > 3)
             throw new IllegalArgumentException();

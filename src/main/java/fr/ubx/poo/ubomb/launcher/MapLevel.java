@@ -1,17 +1,15 @@
 package fr.ubx.poo.ubomb.launcher;
 
-import fr.ubx.poo.ubomb.game.Grid;
-
 public class MapLevel {
 
     private final int width;
     private final int height;
-    private final Entity[][] grid;
+    private final ENtity[][] grid;
 
     public MapLevel(int width, int height) {
         this.width = width;
         this.height = height;
-        this.grid = new Entity[height][width];
+        this.grid = new ENtity[height][width];
     }
 
     public int width() {
@@ -21,11 +19,11 @@ public class MapLevel {
         return height;
     }
 
-    public Entity get(int i, int j) {
+    public ENtity get(int i, int j) {
         return grid[j][i];
     }
 
-    public void set(int i, int j, Entity entity) {
+    public void set(int i, int j, ENtity entity) {
         grid[j][i] = entity;
     }
 

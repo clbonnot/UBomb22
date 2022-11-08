@@ -22,6 +22,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
+
         this.lives = game.configuration().playerLives();
     }
 
@@ -59,8 +60,8 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     }
 
     public final boolean canMove(Direction direction) {
-        // Need to be updated ;-)
-        return true;
+        Position nextPos = direction.nextPosition(getPosition());
+        return game.grid().inside(nextPos);
     }
 
     public void update(long now) {
