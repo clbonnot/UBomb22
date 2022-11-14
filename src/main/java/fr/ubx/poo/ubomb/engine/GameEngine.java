@@ -39,7 +39,7 @@ public final class GameEngine {
     private final Player player;
     private final Princess princess;
 
-    private final Monster[] monsters;
+    private final Monster monster;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -52,7 +52,7 @@ public final class GameEngine {
         this.game = game;
         this.player = game.player();
         this.princess = game.princess();
-        this.monsters = game.monsters();
+        this.monster = game.monsters();
         initialize();
         buildAndSetGameLoop();
     }
@@ -86,9 +86,11 @@ public final class GameEngine {
 
         sprites.add(new SpritePlayer(layer, player));
         sprites.add(new SpritePrincess(layer, princess));
-        for (Monster m: monsters) {
+        sprites.add(new SpriteMonster(layer, monster));
+        /**for (Monster m: monsters) {
             sprites.add(new SpriteMonster(layer, m));
-        }
+        }*/
+
     }
 
     void buildAndSetGameLoop() {
