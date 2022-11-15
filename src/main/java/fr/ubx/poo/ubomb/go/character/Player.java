@@ -14,16 +14,13 @@ import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
-public class Player extends GameObject implements Movable, TakeVisitor {
+public class Player extends GameCharacter implements Movable, TakeVisitor {
 
-    private Direction direction;
     private boolean moveRequested = false;
     private final int lives;
 
     public Player(Game game, Position position) {
         super(game, position);
-        this.direction = Direction.DOWN;
-
         this.lives = game.configuration().playerLives();
     }
 
@@ -48,13 +45,11 @@ public class Player extends GameObject implements Movable, TakeVisitor {
         return lives;
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
+
 
     public void requestMove(Direction direction) {
-        if (direction != this.direction) {
-            this.direction = direction;
+        if (direction != getDirection()) {
+            setDirection(direction);
             setModified(true);
         }
         moveRequested = true;
@@ -68,8 +63,8 @@ public class Player extends GameObject implements Movable, TakeVisitor {
 
     public void update(long now) {
         if (moveRequested) {
-            if (canMove(direction)) {
-                doMove(direction);
+            if (canMove(getDirection())) {
+                doMove(getDirection());
             }
         }
         moveRequested = false;

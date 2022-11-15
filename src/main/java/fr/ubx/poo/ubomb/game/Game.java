@@ -4,24 +4,27 @@ import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
+import fr.ubx.poo.ubomb.go.decor.Decor;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Game {
-
+    private final int NB_MONSTER = 5;
     private final Configuration configuration;
     private final Player player;
     private final Princess princess;
-    //private final Monster[] monsters = new Monster[5];
+    private final Monster[] monsters = new Monster[NB_MONSTER];
     private final Grid grid;
+
 
     public Game(Configuration configuration, Grid grid) {
         this.configuration = configuration;
         this.grid = grid;
         player = new Player(this, configuration.playerPosition());
         princess = new Princess(this, new Position(3,3));
-       //monsters[0] = new Monster(this, new Position(2,3));
+        generateMonster();
     }
 
     public Configuration configuration() {
@@ -51,7 +54,26 @@ public class Game {
         return this.princess;
     }
 
-    /*public Monster[] monsters() {
+    public Monster[] monsters() {
         return this.monsters;
-    }*/
+    }
+
+
+    private void generateMonster() {
+        int m = 0;
+        while(NB_MONSTER > m) {
+            Position pos = new Position(new Random().nextInt(grid.width()), new Random().nextInt(grid.height()));
+            Decor d = grid().get(pos);
+            Monster monster = new Monster(this, pos);
+            if(grid().inside(pos) && (d == null || d.walkableBy(monster))) {
+                monsters[m] = monster;
+                m++;
+            }
+
+        }
+        System.out.println("génération terminée");
+        for(Monster mons : monsters) {
+            System.out.println("x ="+mons.getPosition().x()+" and y="+mons.getPosition().y());
+        }
+    }
 }
