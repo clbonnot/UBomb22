@@ -13,7 +13,7 @@ public class Game {
     private final Configuration configuration;
     private final Player player;
     private final Princess princess;
-    private final Monster[] monsters = new Monster[5];
+    //private final Monster[] monsters = new Monster[5];
     private final Grid grid;
 
     public Game(Configuration configuration, Grid grid) {
@@ -21,7 +21,7 @@ public class Game {
         this.grid = grid;
         player = new Player(this, configuration.playerPosition());
         princess = new Princess(this, new Position(3,3));
-        monsters[0] = new Monster(this, new Position(2,3));
+       //monsters[0] = new Monster(this, new Position(2,3));
     }
 
     public Configuration configuration() {
@@ -51,9 +51,7 @@ public class Game {
         return this.princess;
     }
 
-    public Monster[] monsters() {
+    /*public Monster[] monsters() {
         return this.monsters;
-    }
-
-
+    }*/
 }
