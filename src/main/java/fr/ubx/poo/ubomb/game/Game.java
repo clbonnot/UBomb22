@@ -71,9 +71,5 @@ public class Game {
             }
 
         }
-        System.out.println("génération terminée");
-        for(Monster mons : monsters) {
-            System.out.println("x ="+mons.getPosition().x()+" and y="+mons.getPosition().y());
-        }
     }
 }
