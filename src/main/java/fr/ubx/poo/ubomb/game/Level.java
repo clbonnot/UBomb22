@@ -2,7 +2,7 @@ package fr.ubx.poo.ubomb.game;
 
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 import fr.ubx.poo.ubomb.go.decor.*;
-import fr.ubx.poo.ubomb.launcher.Entity;
+import fr.ubx.poo.ubomb.launcher.ENtity;
 import fr.ubx.poo.ubomb.launcher.MapLevel;
 
 import java.util.*;
@@ -26,7 +26,7 @@ public class Level implements Grid {
         for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++) {
                 Position position = new Position(i, j);
-                Entity entity = entities.get(i, j);
+                ENtity entity = entities.get(i, j);
                 switch (entity) {
                     case Stone:
                         elements.put(position, new Stone(position));

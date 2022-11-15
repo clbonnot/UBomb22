@@ -27,7 +27,6 @@ public class Sprite {
     public GameObject getGameObject() {
         return gameObject;
     }
-
     public final void setImage(Image image) {
         if (this.image == null || this.image != image ) {
             this.image = image;

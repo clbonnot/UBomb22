@@ -1,6 +1,6 @@
 package fr.ubx.poo.ubomb.launcher;
 
-public enum Entity {
+public enum ENtity {
     Empty('_'),
     Box('B'),
     Stone('S'),
@@ -20,14 +20,14 @@ public enum Entity {
 
     private final char code;
 
-    Entity(char c) {
+    ENtity(char c) {
         this.code = c;
     }
 
     public char getCode() { return this.code; }
 
-    public static Entity fromCode(char c) {
-        for (Entity entity : values()) {
+    public static ENtity fromCode(char c) {
+        for (ENtity entity : values()) {
             if (entity.code == c)
                 return entity;
         }

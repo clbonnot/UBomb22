@@ -23,6 +23,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
+
         this.lives = game.configuration().playerLives();
     }
 

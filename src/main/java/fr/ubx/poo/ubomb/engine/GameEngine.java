@@ -7,11 +7,10 @@ package fr.ubx.poo.ubomb.engine;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
-import fr.ubx.poo.ubomb.view.ImageResource;
-import fr.ubx.poo.ubomb.view.Sprite;
-import fr.ubx.poo.ubomb.view.SpriteFactory;
-import fr.ubx.poo.ubomb.view.SpritePlayer;
+import fr.ubx.poo.ubomb.go.character.Princess;
+import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -38,6 +37,9 @@ public final class GameEngine {
     private static AnimationTimer gameLoop;
     private final Game game;
     private final Player player;
+    private final Princess princess;
+
+    //private final Monster[] monsters;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -49,6 +51,8 @@ public final class GameEngine {
         this.stage = stage;
         this.game = game;
         this.player = game.player();
+        this.princess = game.princess();
+        //this.monsters = game.monsters();
         initialize();
         buildAndSetGameLoop();
     }
@@ -81,6 +85,11 @@ public final class GameEngine {
         }
 
         sprites.add(new SpritePlayer(layer, player));
+        sprites.add(new SpritePrincess(layer, princess));
+        /*for (Monster m: monsters) {
+            sprites.add(new SpriteMonster(layer, m));
+        }*/
+
     }
 
     void buildAndSetGameLoop() {
