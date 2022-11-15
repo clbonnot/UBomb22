@@ -17,17 +17,20 @@ import fr.ubx.poo.ubomb.go.decor.bonus.*;
 public class Player extends GameCharacter implements Movable, TakeVisitor {
 
     private boolean moveRequested = false;
-    private final int lives;
+    private int lives;
+    private int nbKeys;
 
     public Player(Game game, Position position) {
         super(game, position);
         this.lives = game.configuration().playerLives();
+        nbKeys = 0;
     }
 
 
     @Override
     public void take(Key key) {
-        System.out.println("Take the key ...");
+        nbKeys++;
+        key.remove();
     }
 
     public void doMove(Direction direction) {
@@ -36,6 +39,11 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         GameObject next = game.grid().get(nextPos);
         if (next instanceof Bonus bonus) {
                 bonus.takenBy(this);
+        }
+        for (Monster m : game.monsters()) {
+            if(nextPos.equals(m.getPosition())) {
+                lives--;
+            }
         }
         setPosition(nextPos);
     }
@@ -73,5 +81,9 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     @Override
     public void explode() {
         // TODO
+    }
+
+    public int getNbKeys() {
+        return nbKeys;
     }
 }

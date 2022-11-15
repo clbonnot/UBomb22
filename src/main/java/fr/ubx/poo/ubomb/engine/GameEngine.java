@@ -176,6 +176,10 @@ public final class GameEngine {
     private void update(long now) {
         player.update(now);
 
+        if(player.getPosition().equals(game.princess().getPosition())) {
+            gameLoop.stop();
+            showMessage("Gagné!", Color.GREEN);
+        }
         if (player.getLives() == 0) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
