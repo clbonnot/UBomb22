@@ -12,6 +12,8 @@ import java.util.Random;
 
 public class Game {
     private final int NB_MONSTER = 5;
+
+    private int monsterVelocity = 5;
     private final Configuration configuration;
     private final Player player;
     private final Princess princess;
@@ -72,4 +74,12 @@ public class Game {
 
         }
     }
+    public int getMonsterVelocity() {
+        return monsterVelocity;
+    }
+
+    public void setMonsterVelocity(int monsterVelocity) {
+        this.monsterVelocity = monsterVelocity;
+    }
+
 }

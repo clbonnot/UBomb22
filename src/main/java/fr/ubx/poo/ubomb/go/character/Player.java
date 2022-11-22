@@ -53,6 +53,10 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         return lives;
     }
 
+    public void removeLives() {
+        lives--;
+    }
+
 
 
     public void requestMove(Direction direction) {

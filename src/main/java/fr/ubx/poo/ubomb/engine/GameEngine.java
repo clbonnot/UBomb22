@@ -175,7 +175,13 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
-
+        for (Monster m: monsters) {
+            m.getTimer().update(now);
+            if(!m.getTimer().isRunning()) {
+                m.update(now);
+                m.getTimer().start(60/ game.getMonsterVelocity()*1000);
+            }
+        }
         if(player.getPosition().equals(game.princess().getPosition())) {
             gameLoop.stop();
             showMessage("Gagné!", Color.GREEN);
