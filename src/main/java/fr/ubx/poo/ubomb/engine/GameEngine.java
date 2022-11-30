@@ -38,8 +38,7 @@ public final class GameEngine {
     private final Game game;
     private final Player player;
     private final Princess princess;
-
-    private final Monster monster;
+    private final Monster[] monsters;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -52,7 +51,7 @@ public final class GameEngine {
         this.game = game;
         this.player = game.player();
         this.princess = game.princess();
-        this.monster = game.monsters();
+        this.monsters = game.monsters();
         initialize();
         buildAndSetGameLoop();
     }
@@ -86,10 +85,9 @@ public final class GameEngine {
 
         sprites.add(new SpritePlayer(layer, player));
         sprites.add(new SpritePrincess(layer, princess));
-        sprites.add(new SpriteMonster(layer, monster));
-        /**for (Monster m: monsters) {
+        for (Monster m: monsters) {
             sprites.add(new SpriteMonster(layer, m));
-        }*/
+        }
 
     }
 
@@ -177,7 +175,17 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
-
+        for (Monster m: monsters) {
+            m.getTimer().update(now);
+            if(!m.getTimer().isRunning()) {
+                m.update(now);
+                m.getTimer().start(60/ game.getMonsterVelocity()*1000);
+            }
+        }
+        if(player.getPosition().equals(game.princess().getPosition())) {
+            gameLoop.stop();
+            showMessage("Gagné!", Color.GREEN);
+        }
         if (player.getLives() == 0) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);

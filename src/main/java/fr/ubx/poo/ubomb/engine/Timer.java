@@ -7,7 +7,7 @@ package fr.ubx.poo.ubomb.engine;
 import java.io.Serializable;
 
 public class Timer {
-    private final long duration;
+    private long duration;
     private long startTime;
     private boolean running = false;
     private boolean requested = false;
@@ -39,6 +39,13 @@ public class Timer {
     }
 
     public void start() {
+        if (!running)
+            requested = true;
+    }
+
+    public void start(long duration) {
+        this.duration = duration;
+        remaining = duration;
         if (!running)
             requested = true;
     }
