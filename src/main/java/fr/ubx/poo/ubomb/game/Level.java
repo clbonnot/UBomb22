@@ -27,6 +27,7 @@ public class Level implements Grid {
             for (int j = 0; j < height; j++) {
                 Position position = new Position(i, j);
                 ENtity entity = entities.get(i, j);
+                System.out.println(entity.name());
                 switch (entity) {
                     case Stone:
                         elements.put(position, new Stone(position));
@@ -37,6 +38,10 @@ public class Level implements Grid {
                     case Key:
                         elements.put(position, new Key(position));
                         break;
+                    case Box:
+                        elements.put(position, new Box(position));
+                    case BombRangeDec:
+
                     case Empty: break;
                     default:
                         throw new RuntimeException("EntityCode " + entity.name() + " not processed");

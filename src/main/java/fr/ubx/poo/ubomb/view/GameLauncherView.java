@@ -52,6 +52,7 @@ public class GameLauncherView extends BorderPane {
                 GameEngine engine = new GameEngine(game, stage);
                 engine.start();
             }
+
         });
 
 

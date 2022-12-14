@@ -102,11 +102,11 @@ public class GetFileInfo {
         }
         MapLevel mapLevel = new MapLevel(width, height);
         int i = 0; int j = 0;
-        while(level.charAt(j*i) < level.length()){
-            char c = level.charAt(height * i + j);
-            if(c == EOL) continue;
+        String levelNoEOL = level.replaceAll(String.valueOf(EOL), "");
+        while(height * i + j < levelNoEOL.length()){
+            char c = levelNoEOL.charAt(height * i + j);
             mapLevel.set(i,j, ENtity.fromCode(c));
-            if(j >= width ) { j = 0; i++; }
+            if(j >= width - 1 && i < height - 1) { j = 0; i++; }
             else j++;
         }
 

@@ -21,14 +21,8 @@ public class GameLauncher {
         GetFileInfo getFileInfo = new GetFileInfo(file);
         Configuration configuration = getFileInfo.getConfigInfo();
         MapLevel mapLevel = getFileInfo.getMapInfo(1);
-        for(int i = 0; i < mapLevel.width(); i++) {
-            for (int j = 0; j < mapLevel.height(); j++) {
-                if(mapLevel.get(i,j) != null)
-                    System.out.printf(mapLevel.get(i,j).toString());
-                else System.out.println("null");
-            }
-        }
         Level level = new Level(mapLevel);
+
         return new Game(configuration, level);
 
     }
