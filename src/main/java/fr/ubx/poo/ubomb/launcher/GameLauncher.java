@@ -20,6 +20,7 @@ public class GameLauncher {
     public static Game load(File file) throws IOException {
         GetFileInfo getFileInfo = new GetFileInfo(file);
         Configuration configuration = getFileInfo.getConfigInfo();
+        getFileInfo.getNbLevel();
         MapLevel mapLevel = getFileInfo.getMapInfo(1);
         Level level = new Level(mapLevel);
 
