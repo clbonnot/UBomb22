@@ -45,9 +45,8 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         }
         if(next instanceof Box) {
             ((Box) next).doMove(direction);
-            Position positionBox = direction.nextPosition(nextPos);
-            Box newBox = new Box(positionBox);
-            // gerer le pb (clement)
+            game.grid().set(direction.nextPosition(nextPos),game.grid().get(nextPos) );
+            game.grid().remove(nextPos);
         }
         setPosition(nextPos);
         for (Monster m : game.monsters()) {
@@ -90,7 +89,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public final boolean canMoveBox(Direction direction, Position position) {
         Position next = direction.nextPosition(position);
         Decor d = game.grid().get(next);
-        return game.grid().inside(next) && (d == null || d.walkableBy(game.player()));
+        return game.grid().inside(next) && d == null && !game.hasCharacter(next);
     }
 
     public void update(long now) {
