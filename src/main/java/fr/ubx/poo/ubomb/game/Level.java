@@ -41,8 +41,14 @@ public class Level implements Grid {
                         elements.put(position, new Box(position));
                         break;
                     case Empty: break;
+                    case BombNumberInc:
+                    case BombRangeInc:
+                    case DoorNextOpened:
+                    case Monster:
                     default:
-                        throw new RuntimeException("EntityCode " + entity.name() + " not processed");
+                        System.out.println(entity.name());
+
+                        //throw new RuntimeException("EntityCode " + entity.name() + " not processed");
                 }
             }
     }
