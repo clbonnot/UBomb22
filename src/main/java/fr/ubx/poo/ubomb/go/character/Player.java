@@ -11,25 +11,29 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.TakeVisitor;
+import fr.ubx.poo.ubomb.go.decor.Box;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
-public class Player extends GameObject implements Movable, TakeVisitor {
+public class Player extends GameCharacter implements Movable, TakeVisitor {
 
     private Direction direction;
     private boolean moveRequested = false;
-    private final int lives;
+    private int lives;
+    private int nbKeys;
 
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
         this.lives = game.configuration().playerLives();
+        nbKeys = 0;
     }
 
 
     @Override
     public void take(Key key) {
-        System.out.println("Take the key ...");
+        nbKeys++;
+        key.remove();
     }
 
     public void doMove(Direction direction) {
@@ -37,14 +41,29 @@ public class Player extends GameObject implements Movable, TakeVisitor {
         Position nextPos = direction.nextPosition(getPosition());
         GameObject next = game.grid().get(nextPos);
         if (next instanceof Bonus bonus) {
-                bonus.takenBy(this);
+            bonus.takenBy(this);
+        }
+        if(next instanceof Box) {
+            ((Box) next).doMove(direction);
+            Position positionBox = direction.nextPosition(nextPos);
+            Box newBox = new Box(positionBox);
+            // gerer le pb (clement)
         }
         setPosition(nextPos);
+        for (Monster m : game.monsters()) {
+            if(nextPos.equals(m.getPosition())) {
+                lives--;
+            }
+        }
     }
 
 
     public int getLives() {
         return lives;
+    }
+
+    public void removeLives() {
+        lives--;
     }
 
     public Direction getDirection() {
@@ -62,6 +81,15 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     public final boolean canMove(Direction direction) {
         Position next = direction.nextPosition(getPosition());
         Decor d = game.grid().get(next);
+        if(d instanceof Box) {
+            return canMoveBox(direction, next);
+        }
+        return game.grid().inside(next) && (d == null || d.walkableBy(game.player()));
+    }
+
+    public final boolean canMoveBox(Direction direction, Position position) {
+        Position next = direction.nextPosition(position);
+        Decor d = game.grid().get(next);
         return game.grid().inside(next) && (d == null || d.walkableBy(game.player()));
     }
 
@@ -77,5 +105,8 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     @Override
     public void explode() {
         // TODO
+    }
+    public int getNbKeys() {
+        return nbKeys;
     }
 }

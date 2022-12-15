@@ -186,7 +186,7 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Gagné!", Color.GREEN);
         }
-        if (player.getLives() == 0) {
+        if (player.getLives() < 0) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
         }
