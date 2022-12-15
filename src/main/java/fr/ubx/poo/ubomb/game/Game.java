@@ -82,4 +82,13 @@ public class Game {
         this.monsterVelocity = monsterVelocity;
     }
 
+    public boolean hasCharacter(Position position) {
+        for (Monster m: monsters) {
+            if(position.equals(m.getPosition())) {
+                return true;
+            }
+        }
+        return position.equals(princess.getPosition());
+    }
+
 }
