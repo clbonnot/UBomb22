@@ -21,19 +21,51 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     private boolean moveRequested = false;
     private int lives;
     private int nbKeys;
-
+    private int bombRange;
+    private int bombNumber;
+    private final int bombBagCapacity = 3;
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
         this.lives = game.configuration().playerLives();
         nbKeys = 0;
+        bombRange = 1;
+        bombNumber = 0;
     }
 
 
     @Override
-    public void take(Key key) {
-        nbKeys++;
-        key.remove();
+    public void take(Bonus bonus) {
+        switch (bonus.toString()) {
+            case "Key":
+                nbKeys++;
+                bonus.remove();
+                break;
+            case "bombRangInc":
+                this.bombRange++;
+                bonus.remove();
+                break;
+            case "bombRangDec":
+                if (this.bombRange > 0) {
+                    this.bombRange--;
+                    bonus.remove();
+                }
+                break;
+            case "bombNumberInc":
+                if(this.bombBagCapacity >bombNumber ) {
+                    this.bombNumber++;
+                    bonus.remove();
+                }
+                break;
+            case "bombNumberDec":
+                if (this.bombNumber > 0) {
+                    this.bombNumber--;
+                    bonus.remove();
+                }
+                break;
+            default:
+                System.out.println("error taking bonus");
+        }
     }
 
     public void doMove(Direction direction) {
@@ -108,4 +140,11 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public int getNbKeys() {
         return nbKeys;
     }
+    public int getBombRange() {
+        return bombRange;
+    }
+    public int getBombNumber() {
+        return bombNumber;
+    }
+
 }

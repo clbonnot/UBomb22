@@ -24,4 +24,8 @@ public abstract class Bonus extends Decor implements Takeable {
         remove();
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
