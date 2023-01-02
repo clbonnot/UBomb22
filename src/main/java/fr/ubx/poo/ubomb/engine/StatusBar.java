@@ -4,11 +4,13 @@
 
 package fr.ubx.poo.ubomb.engine;
 
+import com.sun.source.tree.LambdaExpressionTree;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.view.ImageResource;
 import fr.ubx.poo.ubomb.view.ImageResourceFactory;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,6 +73,7 @@ public class StatusBar {
 
     public void update(Game game) {
         Player player = game.player();
+        ((ImageView) level.getChildren().get(0)).setImage(ImageResource.getDigitImage(game.getCurrentLevel()).getImage());
         lives.setText(Integer.toString(player.getLives()));
         bombRange.setText(Integer.toString(player.getBombRange()));
         availableBombs.setText(Integer.toString(player.getBombNumber()));

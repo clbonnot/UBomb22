@@ -1,16 +1,17 @@
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 
 public class Monster extends GameCharacter {
-    boolean invincibility;
-    public Monster(Game game, Position position) {
+
+    private int lives;
+
+    public Monster(Game game, Position position, int lives) {
         super(game, position);
-        invincibility = false;
+        this.lives = lives;
     }
 
     public void update(long now) {
@@ -44,5 +45,9 @@ public class Monster extends GameCharacter {
     }
     public void setInvincibility(boolean choice){
         invincibility = choice;
+    }
+
+    public int getLives() {
+        return lives;
     }
 }

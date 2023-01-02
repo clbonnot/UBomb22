@@ -90,7 +90,7 @@ public class Game {
         while(NB_MONSTER > m) {
             Position pos = new Position(new Random().nextInt(currentGridLevel.width()), new Random().nextInt(currentGridLevel.height()));
             Decor d = grid().get(pos);
-            Monster monster = new Monster(this, pos);
+            Monster monster = new Monster(this, pos, getCurrentLevel() / 2 + 1);
             if(grid().inside(pos) && (d == null || d.walkableBy(monster))) {
                 currentGridMonsters[m] = monster;
                 m++;
