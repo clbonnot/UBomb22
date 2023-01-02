@@ -24,6 +24,9 @@ public class ImageResourceFactory {
         return ImageResource.valueOf("DOOR_" + (open ? "OPENED" : "CLOSED"));
     }
     public static ImageResource getBomb(int i) {
+        if(i== 4) {
+            i = 3;
+        }
         if (i < 0 || i > 3)
             throw new IllegalArgumentException();
         return ImageResource.valueOf("BOMB_"+i);

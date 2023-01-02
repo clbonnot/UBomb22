@@ -7,15 +7,18 @@ package fr.ubx.poo.ubomb.engine;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
-import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.Door;
+import fr.ubx.poo.ubomb.go.decor.Bomb;
+import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -28,10 +31,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public final class GameEngine {
@@ -41,6 +41,7 @@ public final class GameEngine {
     private final Player player;
     private final Princess princess;
     private final List<Monster[]> monsters;
+    private ArrayList<Bomb> bombs = new ArrayList<>();
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -136,7 +137,11 @@ public final class GameEngine {
     }
 
     private void createNewBombs(long now) {
-        // Create a new Bomb is needed
+        Bomb bomb = new Bomb(player.getPosition());
+        game.grid().set(player.getPosition(), bomb);
+        sprites.add(new SpriteBomb(layer, bomb));
+        bombs.add(bomb);
+        bomb.updateBomb();
     }
 
     private void checkCollision(long now) {
@@ -158,6 +163,11 @@ public final class GameEngine {
             player.requestMove(Direction.UP);
         } else if (input.isKey()) {
             openDoor();
+        } else if (input.isBomb()) {
+            if (player.getBombNumber() > 0) {
+                createNewBombs(now);
+                player.setBombNumber(player.getBombNumber() - 1);
+            }
         }
         input.clear();
     }
@@ -203,7 +213,7 @@ public final class GameEngine {
                 m.getTimer().update(now);
                 if (!m.getTimer().isRunning()) {
                     m.update(now);
-                    m.getTimer().start(8 / game.getMonsterVelocity() * 1000);
+                    m.getTimer().start(60 / game.getMonsterVelocity() * 1000);
                     if (monsters.indexOf(monsters1) + 1 != currentLevel) m.setModified(false);
                 }
             }
@@ -228,6 +238,19 @@ public final class GameEngine {
 
         // Si le joueur a atteint la princesse
         if (player.getPosition().equals(game.princess().getPosition()) && currentLevel == game.getNbLevel()) {
+        for (Iterator<Bomb> it = bombs.iterator(); it.hasNext(); ) {
+            Bomb b = it.next();
+            b.getTimer().update(now);
+            if (!b.getTimer().isRunning()) {
+                b.remove();
+                it.remove();
+                makeExplosion(b);
+            } else {
+                b.updateBomb();
+            }
+        }
+
+        if (player.getPosition().equals(game.princess().getPosition())) {
             gameLoop.stop();
             showMessage("Gagné!", Color.GREEN);
         }
@@ -256,5 +279,36 @@ public final class GameEngine {
 
     public void start() {
         gameLoop.start();
+    }
+
+    public void makeExplosion(Bomb b) {
+        ArrayList<Position> reachPositions = new ArrayList<>();
+        Position p = b.getPosition();
+        int range = player.getBombRange();
+        if (p.equals(player.getPosition())) {
+            player.removeLives();
+        }
+
+        for (Direction d : Direction.values()) {
+            Position pos = p;
+            boolean stop = false;
+            for (int i = 0; i < range; i++) {
+                if (!stop) {
+                    pos = d.nextPosition(pos);
+                    reachPositions.add(pos);
+                    GameObject next = game.grid().get(pos);
+                    if (pos.equals(player.getPosition())) {
+                        player.removeLives();
+                    }
+                    if (next != null) {
+                        stop = true;
+                        if (!(next instanceof Key || next instanceof Bomb)) {
+                            animateExplosion(p, pos);
+                            next.remove();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

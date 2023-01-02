@@ -27,7 +27,24 @@ public final class SpriteFactory {
             ImageResource imgRs = ((Door) gameObject).isOpened() ? DOOR_OPENED : DOOR_CLOSED;
             return new Sprite(layer, imgRs.getImage(), gameObject);
         }
+        if (gameObject instanceof BombRange b) {
+            if(b.getIncrementation()) {
+                return new Sprite(layer, BONUS_BOMB_RANGE_INC.getImage(), gameObject);
+            }
+            else {
+                return new Sprite(layer, BONUS_BOMB_RANGE_DEC.getImage(), gameObject) ;
+            }
+        }
+        if (gameObject instanceof BombNumber b) {
+            if(b.getIncrementation()) {
+
+                return new Sprite(layer, BONUS_BOMB_NB_INC.getImage(), gameObject);
+            }
+            else {
+                return new Sprite(layer, BONUS_BOMB_NB_DEC.getImage(), gameObject) ;
+            }
+        }
+
         throw new RuntimeException("Unsupported sprite for decor " + gameObject);
     }
-
 }
