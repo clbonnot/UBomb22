@@ -45,6 +45,10 @@ public final class SpriteFactory {
             }
         }
 
+        if(gameObject instanceof Bomb b){
+            return new Sprite(layer, BOMB_0.getImage(), gameObject);
+        }
+
         throw new RuntimeException("Unsupported sprite for decor " + gameObject);
     }
 }

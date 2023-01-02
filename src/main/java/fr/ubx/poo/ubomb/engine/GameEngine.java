@@ -40,7 +40,8 @@ public final class GameEngine {
     private final Player player;
     private final Princess princess;
     private final List<Monster[]> monsters;
-    private ArrayList<Bomb> bombs = new ArrayList<>();
+    private final ArrayList<Bomb> bombs = new ArrayList<>();
+    private final HashMap<Bomb, Integer> bombsLevel = new HashMap<>();
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -137,6 +138,7 @@ public final class GameEngine {
         game.grid().set(player.getPosition(), bomb);
         sprites.add(new SpriteBomb(layer, bomb));
         bombs.add(bomb);
+        bombsLevel.put(bomb, currentLevel);
         bomb.updateBomb();
     }
 
@@ -176,7 +178,6 @@ public final class GameEngine {
                 if (door.equals(d)) {
                     sprite.remove();
                     sprites.add(SpriteFactory.create(layer, door));
-
                     return;
                 }
             }
@@ -237,7 +238,8 @@ public final class GameEngine {
                 b.remove();
                 it.remove();
                 makeExplosion(b);
-            } else {
+                bombsLevel.remove(b);
+            } else if(bombsLevel.get(b) == currentLevel){
                 b.updateBomb();
             }
 
@@ -286,14 +288,16 @@ public final class GameEngine {
             for (int i = 0; i < range; i++) {
                 if (!stop) {
                     pos = d.nextPosition(pos);
-                    GameObject next = game.grid().get(pos);
+                    int bombLevel = bombsLevel.get(b);
+                    GameObject next = game.getGridLevel(bombLevel).get(pos);
                     if (pos.equals(player.getPosition())) {
                         player.removeLives();
                     }
                     if (next != null) {
                         stop = true;
                         if (!(next instanceof Key || next instanceof Bomb)) {
-                            animateExplosion(p, pos);
+                            if(currentLevel == bombLevel)
+                                animateExplosion(p, pos);
                             next.remove();
                         }
                     }

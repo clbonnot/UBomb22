@@ -128,6 +128,9 @@ public class Game {
         return grids.size();
     }
 
+    public Grid getGridLevel(int level) {
+        return grids.get(level - 1);
+    }
 
     public Position getDoorPosition(boolean next) {
         for(Decor d : grid().values()){
