@@ -6,12 +6,12 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 
 public class Monster extends GameCharacter {
-
     private int lives;
-
+    private boolean invincibility;
     public Monster(Game game, Position position, int lives) {
         super(game, position);
         this.lives = lives;
+        invincibility = false;
     }
 
     public void update(long now) {
@@ -49,5 +49,9 @@ public class Monster extends GameCharacter {
 
     public int getLives() {
         return lives;
+    }
+
+    public void removeLive() {
+        lives--;
     }
 }

@@ -302,11 +302,14 @@ public final class GameEngine {
                         }
                     }
                     for (Monster m : monsters.get(currentLevel - 1)) {
-                        if(m.getPosition().equals(pos) && m.isInvincibility()) {
+                        if(m.getPosition().equals(pos) && !m.isInvincibility()) {
                             m.setInvincibility(true);
-                            m.remove();
-                            //m.removeLive...
-
+                            if(m.getLives() > 1) {
+                                m.removeLive();
+                            }
+                            else {
+                                m.remove();
+                            }
                         }
                         m.setModified(true);
                     }
