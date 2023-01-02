@@ -4,7 +4,6 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -25,7 +24,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     private int bombRange;
     private int bombNumber;
     private final int bombBagCapacity;
-    private final long invisibilyTime;
+    private final long invisibilityTime;
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
@@ -34,7 +33,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         bombRange = 1;
         bombNumber = 0;
         bombBagCapacity = game.configuration().bombBagCapacity();
-        invisibilyTime = game.configuration().playerInvisibilityTime();
+        invisibilityTime = game.configuration().playerInvisibilityTime();
     }
 
 
@@ -163,6 +162,6 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         this.bombNumber = nbBomb;
     }
     public long getInvisibilityTime(){
-        return invisibilyTime;
+        return invisibilityTime;
     }
 }

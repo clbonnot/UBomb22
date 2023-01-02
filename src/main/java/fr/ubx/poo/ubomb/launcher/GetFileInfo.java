@@ -119,8 +119,6 @@ public class GetFileInfo {
         int i = 0; int j = 0;
         String levelNoEOL = level.replaceAll(String.valueOf(EOL), "");
         while(height * i + j < levelNoEOL.length()){
-            System.out.println(width + ":" + height);
-            System.out.println(height * i + j + ":" + i + ":" + j + ":" + levelNoEOL.length());
             char c = levelNoEOL.charAt(height * i + j);
             mapLevel.set(i,j, ENtity.fromCode(c));
             if(j >= height - 1 && i < width - 1) { j = 0; i++; }
