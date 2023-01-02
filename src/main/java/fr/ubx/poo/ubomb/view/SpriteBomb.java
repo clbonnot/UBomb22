@@ -14,7 +14,7 @@ public class SpriteBomb extends Sprite {
     @Override
     public void updateImage() {
         Bomb bomb = (Bomb) getGameObject();
-        Image image = ImageResourceFactory.getBomb((int) bomb.getTimer().remaining()/1000).getImage();
+        Image image = ImageResourceFactory.getBomb((int) (bomb.getTimer().remaining()/1000)).getImage();
         setImage(image);
     }
 }

@@ -88,7 +88,7 @@ public final class GameEngine {
 
         sprites.add(new SpritePlayer(layer, player));
         sprites.add(new SpritePrincess(layer, princess));
-        for (Monster m: monsters) {
+        for (Monster m : monsters) {
             sprites.add(new SpriteMonster(layer, m));
         }
 
@@ -157,11 +157,10 @@ public final class GameEngine {
             player.requestMove(Direction.RIGHT);
         } else if (input.isMoveUp()) {
             player.requestMove(Direction.UP);
-        }
-        else if (input.isBomb()) {
-            if(player.getBombNumber() > 0) {
+        } else if (input.isBomb()) {
+            if (player.getBombNumber() > 0) {
                 createNewBombs(now);
-                player.setBombNumber(player.getBombNumber()-1);
+                player.setBombNumber(player.getBombNumber() - 1);
             }
         }
         input.clear();
@@ -188,27 +187,26 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
-        for (Monster m: monsters) {
+        for (Monster m : monsters) {
             m.getTimer().update(now);
-            if(!m.getTimer().isRunning()) {
+            if (!m.getTimer().isRunning()) {
                 m.update(now);
-                m.getTimer().start(60/ game.getMonsterVelocity()*1000);
+                m.getTimer().start(60 / game.getMonsterVelocity() * 1000);
             }
         }
-        for(Iterator<Bomb> it = bombs.iterator(); it.hasNext();) {
+        for (Iterator<Bomb> it = bombs.iterator(); it.hasNext(); ) {
             Bomb b = it.next();
             b.getTimer().update(now);
-            if(!b.getTimer().isRunning()) {
+            if (!b.getTimer().isRunning()) {
                 b.remove();
                 it.remove();
                 makeExplosion(b);
-            }
-            else {
+            } else {
                 b.updateBomb();
             }
         }
 
-        if(player.getPosition().equals(game.princess().getPosition())) {
+        if (player.getPosition().equals(game.princess().getPosition())) {
             gameLoop.stop();
             showMessage("Gagné!", Color.GREEN);
         }
@@ -242,27 +240,30 @@ public final class GameEngine {
         ArrayList<Position> reachPositions = new ArrayList<>();
         Position p = b.getPosition();
         int range = player.getBombRange();
-
-            for (Direction d : Direction.values()) {
-                Position pos = d.nextPosition(p);
-                reachPositions.add(pos);
-                for(int i = 0; i < range-1; i++) {
-                    pos = d.nextPosition(pos);
-                    reachPositions.add(pos);
-
-                }
-            }
-
-        for (Position position : reachPositions) {
-            GameObject next = game.grid().get(position);
-            if(next != null) {
-                if(!(next instanceof Key || next instanceof Bomb)) {
-                    animateExplosion(p,position);
-                    next.remove();
-                }
-            }
-
+        if (p.equals(player.getPosition())) {
+            player.removeLives();
         }
 
+        for (Direction d : Direction.values()) {
+            Position pos = p;
+            boolean stop = false;
+            for (int i = 0; i < range; i++) {
+                if (!stop) {
+                    pos = d.nextPosition(pos);
+                    reachPositions.add(pos);
+                    GameObject next = game.grid().get(pos);
+                    if (pos.equals(player.getPosition())) {
+                        player.removeLives();
+                    }
+                    if (next != null) {
+                        stop = true;
+                        if (!(next instanceof Key || next instanceof Bomb)) {
+                            animateExplosion(p, pos);
+                            next.remove();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

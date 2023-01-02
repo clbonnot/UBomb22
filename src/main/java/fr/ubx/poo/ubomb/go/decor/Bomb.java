@@ -9,7 +9,7 @@ public class Bomb extends Decor {
 
     public Bomb(Position position) {
         super(position);
-        timer = new Timer(3*1000);
+        timer = new Timer(4*1000);
         timer.start();
     }
 
