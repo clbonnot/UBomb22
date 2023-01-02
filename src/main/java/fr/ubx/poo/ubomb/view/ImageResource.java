@@ -85,6 +85,22 @@ public enum ImageResource {
         }
     }
 
+    public static ImageResource getDigitImage(int currentLevel) {
+        switch(currentLevel){
+            case 0 : return DIGIT_0;
+            case 1 : return DIGIT_1;
+            case 2 : return DIGIT_2;
+            case 3 : return DIGIT_3;
+            case 4 : return DIGIT_4;
+            case 5 : return DIGIT_5;
+            case 6 : return DIGIT_6;
+            case 7 : return DIGIT_7;
+            case 8 : return DIGIT_8;
+            case 9 : return DIGIT_9;
+        }
+        return DIGIT_0;
+    }
+
     public Image getImage() {
         return image;
     }

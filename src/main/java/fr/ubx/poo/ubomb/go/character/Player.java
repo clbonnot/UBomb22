@@ -24,7 +24,8 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     private int nbKeys;
     private int bombRange;
     private int bombNumber;
-    private final int bombBagCapacity = 3;
+    private final int bombBagCapacity;
+    private final long invisibilyTime;
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
@@ -32,6 +33,8 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         nbKeys = 0;
         bombRange = 1;
         bombNumber = 0;
+        bombBagCapacity = game.configuration().bombBagCapacity();
+        invisibilyTime = game.configuration().playerInvisibilityTime();
     }
 
 
@@ -159,5 +162,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public void setBombNumber(int nbBomb) {
         this.bombNumber = nbBomb;
     }
-
+    public long getInvisibilityTime(){
+        return invisibilyTime;
+    }
 }

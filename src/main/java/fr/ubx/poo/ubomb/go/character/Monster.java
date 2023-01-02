@@ -6,8 +6,12 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 
 public class Monster extends GameCharacter {
-    public Monster(Game game, Position position) {
+
+    private int lives;
+
+    public Monster(Game game, Position position, int lives) {
         super(game, position);
+        this.lives = lives;
     }
 
     public void update(long now) {
@@ -34,5 +38,9 @@ public class Monster extends GameCharacter {
         if(nextPos.equals(game.player().getPosition())) {
             game.player().removeLives();
         }
+    }
+
+    public int getLives() {
+        return lives;
     }
 }
