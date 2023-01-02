@@ -1,5 +1,6 @@
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -8,10 +9,12 @@ import fr.ubx.poo.ubomb.go.decor.Decor;
 public class Monster extends GameCharacter {
     private int lives;
     private boolean invincibility;
+    private Timer timerInvincibility;
     public Monster(Game game, Position position, int lives) {
         super(game, position);
         this.lives = lives;
         invincibility = false;
+        this.timerInvincibility = new Timer(1000);
     }
 
     public void update(long now) {
@@ -54,4 +57,9 @@ public class Monster extends GameCharacter {
     public void removeLive() {
         lives--;
     }
+
+    public Timer getTimerInvincibility() {
+        return timerInvincibility;
+    }
+
 }

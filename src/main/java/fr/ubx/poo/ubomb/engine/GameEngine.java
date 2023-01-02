@@ -213,6 +213,9 @@ public final class GameEngine {
                     m.getTimer().start(60 / game.getMonsterVelocity(level) * 1000);
                     if (monsters.indexOf(monsters1) + 1 != currentLevel) m.setModified(false);
                 }
+                if (!m.getTimerInvincibility().isRunning()) {
+                    m.setInvincibility(false);
+                }
                 level++;
             }
         }
@@ -308,6 +311,7 @@ public final class GameEngine {
                             m.setInvincibility(true);
                             if(m.getLives() > 1) {
                                 m.removeLive();
+                                m.getTimerInvincibility().start();
                             }
                             else {
                                 m.remove();
