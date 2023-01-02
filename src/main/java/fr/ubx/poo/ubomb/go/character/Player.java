@@ -4,7 +4,6 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -13,6 +12,7 @@ import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.Box;
 import fr.ubx.poo.ubomb.go.decor.Decor;
+import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
 public class Player extends GameCharacter implements Movable, TakeVisitor {
@@ -40,9 +40,10 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
         GameObject next = game.grid().get(nextPos);
-        if (next instanceof Bonus bonus) {
+        if (next instanceof Bonus bonus)
             bonus.takenBy(this);
-        }
+        if(next instanceof Door door)
+            door.isTaken(this);
         if(next instanceof Box) {
             ((Box) next).doMove(direction);
             Position positionBox = direction.nextPosition(nextPos);
@@ -50,7 +51,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
             // gerer le pb (clement)
         }
         setPosition(nextPos);
-        for (Monster m : game.monsters()) {
+        for (Monster m : game.monsters().get(game.getCurrentLevel() - 1)) {
             if(nextPos.equals(m.getPosition())) {
                 lives--;
             }
@@ -81,6 +82,9 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public final boolean canMove(Direction direction) {
         Position next = direction.nextPosition(getPosition());
         Decor d = game.grid().get(next);
+        if(d instanceof Door door)
+            if(!door.isOpened())
+                System.out.println("La porte est fermée, trouve une clé pour l'ouvrir");
         if(d instanceof Box) {
             return canMoveBox(direction, next);
         }
@@ -108,5 +112,10 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     }
     public int getNbKeys() {
         return nbKeys;
+    }
+
+    public void takeDoor(boolean next) {
+        int numLevel = game.changeFloor(next);
+        System.out.println("Niveau " + numLevel);
     }
 }

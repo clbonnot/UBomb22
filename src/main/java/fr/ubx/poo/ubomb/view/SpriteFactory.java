@@ -23,6 +23,11 @@ public final class SpriteFactory {
             return new Sprite(layer, KEY.getImage(), gameObject);
         if (gameObject instanceof Box)
             return new Sprite(layer, BOX.getImage(), gameObject);
+        if(gameObject instanceof Door) {
+            ImageResource imgRs = ((Door) gameObject).isOpened() ? DOOR_OPENED : DOOR_CLOSED;
+            return new Sprite(layer, imgRs.getImage(), gameObject);
+        }
         throw new RuntimeException("Unsupported sprite for decor " + gameObject);
     }
+
 }

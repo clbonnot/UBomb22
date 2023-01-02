@@ -20,6 +20,9 @@ public class ImageResourceFactory {
     public static ImageResource getMonster(Direction direction) {
         return ImageResource.valueOf("MONSTER_" + direction);
     }
+    public static ImageResource getDoor(boolean open){
+        return ImageResource.valueOf("DOOR_" + (open ? "OPENED" : "CLOSED"));
+    }
     public static ImageResource getBomb(int i) {
         if (i < 0 || i > 3)
             throw new IllegalArgumentException();

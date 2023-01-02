@@ -31,26 +31,38 @@ public class GetFileInfo {
     }
 
     public Configuration getConfigInfo() throws MapException {
-        Position position = getPlayerPosition();
-        String[] configProperties = { "bombBagCapacity", "playerLives", "playerInvisibilityTime",
-                "monsterVelocity", "monsterInvisibilityTime" };
+        Position playerPos = getPlayerPosition();
+        Position princessPos = getPrincessPosition();
+        String[] configProperties = { "bombBagCapacity", "playerLives", "playerInvincibilityTime",
+                "monsterVelocity", "monsterInvincibilityTime" };
         List<Integer> prop = new ArrayList<>();
         for(String key : configProperties){
             if(!config.containsKey(key)) throw new MapException("propriété de configuration manquante : " + key);
             prop.add(integerProperty(config, key, 0));
         }
-        return new Configuration(position, prop.get(0), prop.get(1), prop.get(2), prop.get(3), prop.get(4));
+        return new Configuration(playerPos, princessPos,prop.get(0), prop.get(1), prop.get(2), prop.get(3), prop.get(4));
     }
 
     private Position getPlayerPosition() {
         if(!config.containsKey("player")) {
-            System.out.println("WARNING : Position de départ du joueur non précisé");
+            System.out.println("WARNING : Position de départ du joueur non précisée");
             return new Position(0,0);
         }
         String[] playerPos = config.getProperty("player").split("x");
         if(playerPos.length != 2 || !isNumeric(playerPos[0]) || !isNumeric(playerPos[1]))
             throw new MapException("propriété de configuration erronée : player");
         return new Position(Integer.parseInt(playerPos[0]), Integer.parseInt(playerPos[1]));
+    }
+
+    private Position getPrincessPosition() {
+        if(!config.containsKey("princess")) {
+            System.out.println("WARNING : Position de la princesse non précisée");
+            return new Position(0,0);
+        }
+        String[] princessPos = config.getProperty("princess").split("x");
+        if(princessPos.length != 2 || !isNumeric(princessPos[0]) || !isNumeric(princessPos[1]))
+            throw new MapException("propriété de configuration erronée : player");
+        return new Position(Integer.parseInt(princessPos[0]), Integer.parseInt(princessPos[1]));
     }
 
     public int getNbLevel() {
@@ -97,16 +109,21 @@ public class GetFileInfo {
         String[] lines = level.split(String.valueOf(EOL));
         System.out.println(level);
         int height = lines.length;
+        int numLine = 1;
         for(String str : lines){
-            if(str.length() != width) throw new MapException("Erreur Map : taille des lignes");
+            if(str.length() != width) throw new MapException("Erreur Map : taille de la ligne "
+                    + numLine + " différente de la première ligne");
+            numLine++;
         }
         MapLevel mapLevel = new MapLevel(width, height);
         int i = 0; int j = 0;
         String levelNoEOL = level.replaceAll(String.valueOf(EOL), "");
         while(height * i + j < levelNoEOL.length()){
+            System.out.println(width + ":" + height);
+            System.out.println(height * i + j + ":" + i + ":" + j + ":" + levelNoEOL.length());
             char c = levelNoEOL.charAt(height * i + j);
             mapLevel.set(i,j, ENtity.fromCode(c));
-            if(j >= width - 1 && i < height - 1) { j = 0; i++; }
+            if(j >= height - 1 && i < width - 1) { j = 0; i++; }
             else j++;
         }
 

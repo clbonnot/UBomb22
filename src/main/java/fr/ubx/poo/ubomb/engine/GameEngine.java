@@ -10,6 +10,8 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
+import fr.ubx.poo.ubomb.go.decor.Decor;
+import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
@@ -38,13 +40,14 @@ public final class GameEngine {
     private final Game game;
     private final Player player;
     private final Princess princess;
-    private final Monster[] monsters;
+    private final List<Monster[]> monsters;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
     private StatusBar statusBar;
     private Pane layer;
     private Input input;
+    private int currentLevel = 1;
 
     public GameEngine(Game game, final Stage stage) {
         this.stage = stage;
@@ -79,13 +82,16 @@ public final class GameEngine {
 
         // Create sprites
         for (var decor : game.grid().values()) {
-            sprites.add(SpriteFactory.create(layer, decor));
+            if(decor instanceof Door d) sprites.add(new SpriteDoor(layer, d));
+            else sprites.add(SpriteFactory.create(layer, decor));
             decor.setModified(true);
         }
 
-        sprites.add(new SpritePlayer(layer, player));
-        sprites.add(new SpritePrincess(layer, princess));
-        for (Monster m: monsters) {
+        if (game.getCurrentLevel() == 1)
+            sprites.add(new SpritePlayer(layer, player));
+        if (game.getCurrentLevel() == game.getNbLevel())
+            sprites.add(new SpritePrincess(layer, princess));
+        for (Monster m : monsters.get(0)) {
             sprites.add(new SpriteMonster(layer, m));
         }
 
@@ -150,8 +156,25 @@ public final class GameEngine {
             player.requestMove(Direction.RIGHT);
         } else if (input.isMoveUp()) {
             player.requestMove(Direction.UP);
+        } else if (input.isKey()) {
+            openDoor();
         }
         input.clear();
+    }
+
+    private void openDoor() {
+        var d = game.OpenIfDoorClosed(player.getNbKeys() > 0);
+        if (d == null) return;
+        for (Sprite sprite : sprites) {
+            if (sprite.getGameObject() instanceof Door door) {
+                if (door.equals(d)) {
+                    sprite.remove();
+                    sprites.add(SpriteFactory.create(layer, door));
+
+                    return;
+                }
+            }
+        }
     }
 
     private void showMessage(String msg, Color color) {
@@ -175,17 +198,40 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
-        for (Monster m: monsters) {
-            m.getTimer().update(now);
-            if(!m.getTimer().isRunning()) {
-                m.update(now);
-                m.getTimer().start(60/ game.getMonsterVelocity()*1000);
+        for (Monster[] monsters1 : monsters) {
+            for (Monster m : monsters1) {
+                m.getTimer().update(now);
+                if (!m.getTimer().isRunning()) {
+                    m.update(now);
+                    m.getTimer().start(8 / game.getMonsterVelocity() * 1000);
+                    if (monsters.indexOf(monsters1) + 1 != currentLevel) m.setModified(false);
+                }
             }
         }
-        if(player.getPosition().equals(game.princess().getPosition())) {
+
+        // Si on change de niveau (le joueur a traversé une porte)
+        if (currentLevel != game.getCurrentLevel()) {
+            for (Sprite sprite : sprites) {
+                sprite.remove();
+            }
+            player.setPosition(game.getDoorPosition(game.getCurrentLevel() < currentLevel));
+            for (var decor : game.grid().values()) {
+                sprites.add(SpriteFactory.create(layer, decor));
+                decor.setModified(true);
+            }
+            currentLevel = game.getCurrentLevel();
+            for (Monster m : monsters.get(currentLevel - 1)){
+                sprites.add(new SpriteMonster(layer, m));
+                m.setModified(true);
+            }
+        }
+
+        // Si le joueur a atteint la princesse
+        if (player.getPosition().equals(game.princess().getPosition()) && currentLevel == game.getNbLevel()) {
             gameLoop.stop();
             showMessage("Gagné!", Color.GREEN);
         }
+        // Si le joueur n'a plus de vie
         if (player.getLives() < 0) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
