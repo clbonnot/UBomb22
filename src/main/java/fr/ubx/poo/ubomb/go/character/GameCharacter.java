@@ -13,7 +13,7 @@ public abstract class GameCharacter extends GameObject {
     public GameCharacter(Game game, Position position) {
         super(game,position);
         direction = Direction.random();
-        timerMove = new Timer(60/ game.getMonsterVelocity()*1000);
+        timerMove = new Timer(60/ game.getMonsterVelocity(game.getCurrentLevel())*1000);
         timerMove.start();
     }
     public Direction getDirection() {

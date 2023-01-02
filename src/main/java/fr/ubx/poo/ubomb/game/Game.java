@@ -16,7 +16,7 @@ import java.util.Random;
 public class Game {
     private final int NB_MONSTER = 5;
 
-    private int monsterVelocity = 5;
+    private int monsterVelocity;
     private final Configuration configuration;
     private final Player player;
     private final Princess princess;
@@ -32,6 +32,7 @@ public class Game {
         this.grids = grids;
         player = new Player(this, configuration.playerPosition());
         princess = new Princess(this, configuration.princessPosition());
+        monsterVelocity = configuration.monsterVelocity();
         generateLevels(grids);
     }
 
@@ -40,7 +41,7 @@ public class Game {
         this.grids = grids;
         player = new Player(this, configuration.playerPosition());
         princess = new Princess(this, configuration.princessPosition());
-
+        monsterVelocity = configuration.monsterVelocity();
         generateLevels(grids);
     }
 
@@ -98,8 +99,8 @@ public class Game {
         }
         monsters.add(getCurrentLevel() - 1, currentGridMonsters);
     }
-    public int getMonsterVelocity() {
-        return monsterVelocity;
+    public int getMonsterVelocity(int level) {
+        return monsterVelocity + level;
     }
 
     public void setMonsterVelocity(int monsterVelocity) {

@@ -204,14 +204,16 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
+        int level = 1;
         for (Monster[] monsters1 : monsters) {
             for (Monster m : monsters1) {
                 m.getTimer().update(now);
                 if (!m.getTimer().isRunning()) {
                     m.update(now);
-                    m.getTimer().start(60 / game.getMonsterVelocity() * 1000);
+                    m.getTimer().start(60 / game.getMonsterVelocity(level) * 1000);
                     if (monsters.indexOf(monsters1) + 1 != currentLevel) m.setModified(false);
                 }
+                level++;
             }
         }
 
