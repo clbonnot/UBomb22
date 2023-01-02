@@ -135,8 +135,9 @@ public final class GameEngine {
     private void createNewBombs(long now) {
         Bomb bomb = new Bomb(player.getPosition());
         game.grid().set(player.getPosition(), bomb);
-        sprites.add(SpriteFactory.create(layer, bomb));
+        sprites.add(new SpriteBomb(layer, bomb));
         bombs.add(bomb);
+        bomb.updateBomb();
     }
 
     private void checkCollision(long now) {
@@ -202,6 +203,9 @@ public final class GameEngine {
                 it.remove();
                 makeExplosion(b);
             }
+            else {
+                b.updateBomb();
+            }
         }
 
         if(player.getPosition().equals(game.princess().getPosition())) {
@@ -253,6 +257,7 @@ public final class GameEngine {
             GameObject next = game.grid().get(position);
             if(next != null) {
                 if(!(next instanceof Key || next instanceof Bomb)) {
+                    animateExplosion(p,position);
                     next.remove();
                 }
             }
