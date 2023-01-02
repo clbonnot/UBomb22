@@ -11,14 +11,13 @@ import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
-import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.go.decor.Bomb;
+import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -83,7 +82,7 @@ public final class GameEngine {
 
         // Create sprites
         for (var decor : game.grid().values()) {
-            if(decor instanceof Door d) sprites.add(new SpriteDoor(layer, d));
+            if (decor instanceof Door d) sprites.add(new SpriteDoor(layer, d));
             else sprites.add(SpriteFactory.create(layer, decor));
             decor.setModified(true);
         }
@@ -103,13 +102,10 @@ public final class GameEngine {
             public void handle(long now) {
                 // Check keyboard actions
                 processInput(now);
-
                 // Do actions
                 update(now);
-                createNewBombs(now);
                 checkCollision(now);
                 checkExplosions();
-
                 // Graphic update
                 cleanupSprites();
                 render();
@@ -205,7 +201,6 @@ public final class GameEngine {
         }.start();
     }
 
-
     private void update(long now) {
         player.update(now);
         for (Monster[] monsters1 : monsters) {
@@ -230,28 +225,25 @@ public final class GameEngine {
                 decor.setModified(true);
             }
             currentLevel = game.getCurrentLevel();
-            for (Monster m : monsters.get(currentLevel - 1)){
+            for (Monster m : monsters.get(currentLevel - 1)) {
                 sprites.add(new SpriteMonster(layer, m));
                 m.setModified(true);
             }
         }
-
-        // Si le joueur a atteint la princesse
-        if (player.getPosition().equals(game.princess().getPosition()) && currentLevel == game.getNbLevel()) {
-            for (Iterator<Bomb> it = bombs.iterator(); it.hasNext(); ) {
-                Bomb b = it.next();
-                b.getTimer().update(now);
-                if (!b.getTimer().isRunning()) {
-                    b.remove();
-                    it.remove();
-                    makeExplosion(b);
-                } else {
-                    b.updateBomb();
-                }
+        for (Iterator<Bomb> it = bombs.iterator(); it.hasNext(); ) {
+            Bomb b = it.next();
+            b.getTimer().update(now);
+            if (!b.getTimer().isRunning()) {
+                b.remove();
+                it.remove();
+                makeExplosion(b);
+            } else {
+                b.updateBomb();
             }
+
         }
 
-        if (player.getPosition().equals(game.princess().getPosition())) {
+        if (player.getPosition().equals(game.princess().getPosition()) && currentLevel == game.getNbLevel()) {
             gameLoop.stop();
             showMessage("Gagné!", Color.GREEN);
         }
@@ -283,20 +275,17 @@ public final class GameEngine {
     }
 
     public void makeExplosion(Bomb b) {
-        ArrayList<Position> reachPositions = new ArrayList<>();
         Position p = b.getPosition();
         int range = player.getBombRange();
         if (p.equals(player.getPosition())) {
             player.removeLives();
         }
-
         for (Direction d : Direction.values()) {
             Position pos = p;
             boolean stop = false;
             for (int i = 0; i < range; i++) {
                 if (!stop) {
                     pos = d.nextPosition(pos);
-                    reachPositions.add(pos);
                     GameObject next = game.grid().get(pos);
                     if (pos.equals(player.getPosition())) {
                         player.removeLives();
