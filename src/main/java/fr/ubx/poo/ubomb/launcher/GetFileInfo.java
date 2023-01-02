@@ -107,7 +107,6 @@ public class GetFileInfo {
     private MapLevel parseStringLevel(String level){
         int width = level.indexOf(EOL);
         String[] lines = level.split(String.valueOf(EOL));
-        System.out.println(level);
         int height = lines.length;
         int numLine = 1;
         for(String str : lines){
