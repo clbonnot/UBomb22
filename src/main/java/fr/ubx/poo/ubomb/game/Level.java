@@ -40,7 +40,6 @@ public class Level implements Grid {
                     case Box:
                         elements.put(position, new Box(position));
                         break;
-                    case Empty: break;
                     case BombNumberInc:
                         elements.put(position, new BombNumber(position, true));
                         break;
@@ -55,6 +54,7 @@ public class Level implements Grid {
                         break;
                     case DoorNextOpened:
                     case Monster:
+                    case Empty: break;
                     default:
                         System.out.println(entity.name());
 

@@ -7,13 +7,18 @@ package fr.ubx.poo.ubomb.engine;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
+import fr.ubx.poo.ubomb.go.decor.Bomb;
+import fr.ubx.poo.ubomb.go.decor.Decor;
+import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -26,10 +31,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public final class GameEngine {
@@ -39,6 +41,7 @@ public final class GameEngine {
     private final Player player;
     private final Princess princess;
     private final Monster[] monsters;
+    private ArrayList<Bomb> bombs = new ArrayList<>();
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -99,7 +102,7 @@ public final class GameEngine {
 
                 // Do actions
                 update(now);
-                createNewBombs(now);
+
                 checkCollision(now);
                 checkExplosions();
 
@@ -130,7 +133,10 @@ public final class GameEngine {
     }
 
     private void createNewBombs(long now) {
-        // Create a new Bomb is needed
+        Bomb bomb = new Bomb(player.getPosition());
+        game.grid().set(player.getPosition(), bomb);
+        sprites.add(SpriteFactory.create(layer, bomb));
+        bombs.add(bomb);
     }
 
     private void checkCollision(long now) {
@@ -150,6 +156,12 @@ public final class GameEngine {
             player.requestMove(Direction.RIGHT);
         } else if (input.isMoveUp()) {
             player.requestMove(Direction.UP);
+        }
+        else if (input.isBomb()) {
+            if(player.getBombNumber() > 0) {
+                createNewBombs(now);
+                player.setBombNumber(player.getBombNumber()-1);
+            }
         }
         input.clear();
     }
@@ -182,6 +194,16 @@ public final class GameEngine {
                 m.getTimer().start(60/ game.getMonsterVelocity()*1000);
             }
         }
+        for(Iterator<Bomb> it = bombs.iterator(); it.hasNext();) {
+            Bomb b = it.next();
+            b.getTimer().update(now);
+            if(!b.getTimer().isRunning()) {
+                b.remove();
+                it.remove();
+                makeExplosion(b);
+            }
+        }
+
         if(player.getPosition().equals(game.princess().getPosition())) {
             gameLoop.stop();
             showMessage("Gagné!", Color.GREEN);
@@ -210,5 +232,32 @@ public final class GameEngine {
 
     public void start() {
         gameLoop.start();
+    }
+
+    public void makeExplosion(Bomb b) {
+        ArrayList<Position> reachPositions = new ArrayList<>();
+        Position p = b.getPosition();
+        int range = player.getBombRange();
+
+            for (Direction d : Direction.values()) {
+                Position pos = d.nextPosition(p);
+                reachPositions.add(pos);
+                for(int i = 0; i < range-1; i++) {
+                    pos = d.nextPosition(pos);
+                    reachPositions.add(pos);
+
+                }
+            }
+
+        for (Position position : reachPositions) {
+            GameObject next = game.grid().get(position);
+            if(next != null) {
+                if(!(next instanceof Key || next instanceof Bomb)) {
+                    next.remove();
+                }
+            }
+
+        }
+
     }
 }

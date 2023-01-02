@@ -146,5 +146,8 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public int getBombNumber() {
         return bombNumber;
     }
+    public void setBombNumber(int nbBomb) {
+        this.bombNumber = nbBomb;
+    }
 
 }
