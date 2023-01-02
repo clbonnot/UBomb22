@@ -207,6 +207,7 @@ public final class GameEngine {
         int level = 1;
         for (Monster[] monsters1 : monsters) {
             for (Monster m : monsters1) {
+                System.out.println(m.getTimer().remaining());
                 m.getTimer().update(now);
                 if (!m.getTimer().isRunning()) {
                     m.update(now);
@@ -308,10 +309,13 @@ public final class GameEngine {
                     }
                     for (Monster m : monsters.get(currentLevel - 1)) {
                         if(m.getPosition().equals(pos) && !m.isInvincibility()) {
-                            m.setInvincibility(true);
+                            System.out.println(m.getLives());
+                            System.out.println(m.getTimer().isRunning());
                             if(m.getLives() > 1) {
                                 m.removeLive();
+                                m.setInvincibility(true);
                                 m.getTimerInvincibility().start();
+                                System.out.println(m.getLives());
                             }
                             else {
                                 m.remove();
