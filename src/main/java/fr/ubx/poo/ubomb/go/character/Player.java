@@ -42,6 +42,10 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
                 nbKeys++;
                 bonus.remove();
                 break;
+            case "Heart":
+                lives++;
+                bonus.remove();
+                break;
             case "bombRangInc":
                 this.bombRange++;
                 bonus.remove();

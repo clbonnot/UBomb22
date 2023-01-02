@@ -62,8 +62,8 @@ public class Level implements Grid {
                         elements.put(position, new Door(position, false, true));
                         break;
                     case Heart:
+                        elements.put(position, new Heart(position));
                         break;
-                    case Monster:
                     case Empty: break;
                     default:
                         System.out.println(entity.name());
