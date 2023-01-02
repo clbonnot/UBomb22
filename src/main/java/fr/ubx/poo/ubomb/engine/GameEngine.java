@@ -301,7 +301,7 @@ public final class GameEngine {
                     }
                     if (next != null) {
                         stop = true;
-                        if (!(next instanceof Key || next instanceof Bomb)) {
+                        if (!(next instanceof Key || next instanceof Bomb || next instanceof Door)) {
                             if(currentLevel == bombLevel)
                                 animateExplosion(p, pos);
                             next.remove();
