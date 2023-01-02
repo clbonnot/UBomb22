@@ -98,7 +98,7 @@ public enum ImageResource {
             case 8 : return DIGIT_8;
             case 9 : return DIGIT_9;
         }
-        return DIGIT_0;
+        return DIGIT_1;
     }
 
     public Image getImage() {
