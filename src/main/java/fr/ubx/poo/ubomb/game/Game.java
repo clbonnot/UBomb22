@@ -158,10 +158,11 @@ public class Game {
         return null;
     }
     public boolean hasCharacter(Position position) {
-        // TO DO
-        for (Monster m: monsters) {
-            if(position.equals(m.getPosition())) {
-                return true;
+        for (Monster[] monsters1: monsters) {
+            for(Monster m : monsters1) {
+                if (monsters.indexOf(monsters1) + 1 != getCurrentLevel() && position.equals(m.getPosition())) {
+                    return true;
+                }
             }
         }
         return position.equals(princess.getPosition());

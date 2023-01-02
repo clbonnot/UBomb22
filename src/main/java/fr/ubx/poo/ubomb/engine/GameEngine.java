@@ -238,15 +238,16 @@ public final class GameEngine {
 
         // Si le joueur a atteint la princesse
         if (player.getPosition().equals(game.princess().getPosition()) && currentLevel == game.getNbLevel()) {
-        for (Iterator<Bomb> it = bombs.iterator(); it.hasNext(); ) {
-            Bomb b = it.next();
-            b.getTimer().update(now);
-            if (!b.getTimer().isRunning()) {
-                b.remove();
-                it.remove();
-                makeExplosion(b);
-            } else {
-                b.updateBomb();
+            for (Iterator<Bomb> it = bombs.iterator(); it.hasNext(); ) {
+                Bomb b = it.next();
+                b.getTimer().update(now);
+                if (!b.getTimer().isRunning()) {
+                    b.remove();
+                    it.remove();
+                    makeExplosion(b);
+                } else {
+                    b.updateBomb();
+                }
             }
         }
 
