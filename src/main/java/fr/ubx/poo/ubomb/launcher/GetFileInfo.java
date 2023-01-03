@@ -33,12 +33,14 @@ public class GetFileInfo {
     public Configuration getConfigInfo() throws MapException {
         Position playerPos = getPlayerPosition();
         Position princessPos = getPrincessPosition();
-        String[] configProperties = { "bombBagCapacity", "playerLives", "playerInvincibilityTime",
-                "monsterVelocity", "monsterInvincibilityTime" };
+        HashMap<String, Integer> configProperties = new HashMap<>();
+        configProperties.put("bombBagCapacity", 3); configProperties.put("playerLives", 5);
+        configProperties.put("playerInvincibilityTime", 4000);  configProperties.put("monsterVelocity", 5);
+        configProperties.put("monsterInvincibilityTime", 1000);
         List<Integer> prop = new ArrayList<>();
-        for(String key : configProperties){
+        for(String key : configProperties.keySet()){
             if(!config.containsKey(key)) throw new MapException("propriété de configuration manquante : " + key);
-            prop.add(integerProperty(config, key, 0));
+            prop.add(integerProperty(config, key, configProperties.get(key)));
         }
         return new Configuration(playerPos, princessPos,prop.get(0), prop.get(1), prop.get(2), prop.get(3), prop.get(4));
     }
