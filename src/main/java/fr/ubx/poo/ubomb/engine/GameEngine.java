@@ -178,10 +178,12 @@ public final class GameEngine {
                 if (door.equals(d)) {
                     sprite.remove();
                     sprites.add(SpriteFactory.create(layer, door));
+                    player.removeKey();
                     return;
                 }
             }
         }
+
     }
 
     private void showMessage(String msg, Color color) {
