@@ -246,6 +246,7 @@ public final class GameEngine {
                 it.remove();
                 makeExplosion(b);
                 bombsLevel.remove(b);
+                player.setBombNumber(player.getBombNumber()+1);
             } else if(bombsLevel.get(b) == currentLevel){
                 b.updateBomb();
             }

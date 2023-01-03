@@ -27,6 +27,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     private final int bombBagCapacity;
     private boolean invincibility;
     private Timer timerInvincibility;
+
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
@@ -61,7 +62,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
                 }
                 break;
             case "bombNumberInc":
-                if(this.bombBagCapacity >bombNumber ) {
+                if (this.bombBagCapacity > bombNumber) {
                     this.bombNumber++;
                     bonus.remove();
                 }
@@ -83,16 +84,16 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         GameObject next = game.grid().get(nextPos);
         if (next instanceof Bonus bonus)
             bonus.takenBy(this);
-        if(next instanceof Door door)
+        if (next instanceof Door door)
             door.isTaken(this);
-        if(next instanceof Box) {
+        if (next instanceof Box) {
             ((Box) next).doMove(direction);
-            game.grid().set(direction.nextPosition(nextPos),game.grid().get(nextPos) );
+            game.grid().set(direction.nextPosition(nextPos), game.grid().get(nextPos));
             game.grid().remove(nextPos);
         }
         setPosition(nextPos);
         for (Monster m : game.monsters().get(game.getCurrentLevel() - 1)) {
-            if(nextPos.equals(m.getPosition())) {
+            if (nextPos.equals(m.getPosition())) {
                 lives--;
             }
         }
@@ -122,10 +123,10 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public final boolean canMove(Direction direction) {
         Position next = direction.nextPosition(getPosition());
         Decor d = game.grid().get(next);
-        if(d instanceof Door door)
-            if(!door.isOpened())
+        if (d instanceof Door door)
+            if (!door.isOpened())
                 System.out.println("La porte est fermée, trouve une clé pour l'ouvrir");
-        if(d instanceof Box) {
+        if (d instanceof Box) {
             return canMoveBox(direction, next);
         }
         return game.grid().inside(next) && (d == null || d.walkableBy(game.player()));
@@ -154,6 +155,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public void explode() {
         // TODO
     }
+
     public int getNbKeys() {
         return nbKeys;
     }
@@ -162,12 +164,15 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         int numLevel = game.changeFloor(next);
         System.out.println("Niveau " + numLevel);
     }
+
     public int getBombRange() {
         return bombRange;
     }
+
     public int getBombNumber() {
         return bombNumber;
     }
+
     public void setBombNumber(int nbBomb) {
         this.bombNumber = nbBomb;
     }
@@ -175,9 +180,15 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public boolean isInvincibility() {
         return invincibility;
     }
-    public void setInvincibility(boolean choice){
+
+    public void setInvincibility(boolean choice) {
         invincibility = choice;
     }
+
     public Timer getTimerInvincibility() {
         return timerInvincibility;
-    }}
+    }
+    public void removeKey() {
+        nbKeys--;
+    }
+}

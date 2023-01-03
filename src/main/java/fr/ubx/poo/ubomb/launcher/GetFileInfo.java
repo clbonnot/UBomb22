@@ -39,7 +39,7 @@ public class GetFileInfo {
         configProperties.put("monsterInvincibilityTime", 1000);
         List<Integer> prop = new ArrayList<>();
         for(String key : configProperties.keySet()){
-            if(!config.containsKey(key)) throw new MapException("propriété de configuration manquante : " + key);
+            if(!config.containsKey(key)) System.out.println("WARNING " + "propriété de configuration manquante : " + key);
             prop.add(integerProperty(config, key, configProperties.get(key)));
         }
         return new Configuration(playerPos, princessPos,prop.get(0), prop.get(1), prop.get(2), prop.get(3), prop.get(4));
