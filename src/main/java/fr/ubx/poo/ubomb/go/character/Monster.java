@@ -14,7 +14,7 @@ public class Monster extends GameCharacter {
         super(game, position);
         this.lives = lives;
         invincibility = false;
-        timerInvincibility = new Timer(1000);
+        timerInvincibility = new Timer(game.configuration().monsterInvisibilityTime());
     }
 
     public void update(long now) {

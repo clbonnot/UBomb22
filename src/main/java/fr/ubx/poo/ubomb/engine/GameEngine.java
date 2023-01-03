@@ -212,6 +212,7 @@ public final class GameEngine {
                     m.getTimer().start(60 / game.getMonsterVelocity(level) * 1000);
                     if (monsters.indexOf(monsters1) + 1 != currentLevel) m.setModified(false);
                 }
+                m.getTimerInvincibility().update(now);
                 if (!m.getTimerInvincibility().isRunning()) {
                     m.setInvincibility(false);
                 }
@@ -294,8 +295,10 @@ public final class GameEngine {
                     pos = d.nextPosition(pos);
                     int bombLevel = bombsLevel.get(b);
                     GameObject next = game.getGridLevel(bombLevel).get(pos);
-                    if (pos.equals(player.getPosition())) {
+                    if (pos.equals(player.getPosition()) && !player.isInvincibility()) {
                         player.removeLives();
+                        player.setInvincibility(true);
+                        player.getTimerInvincibility().start();
                     }
                     if (next != null) {
                         stop = true;
