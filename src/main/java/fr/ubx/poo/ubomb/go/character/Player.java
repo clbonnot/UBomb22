@@ -4,6 +4,7 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -24,7 +25,8 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     private int bombRange;
     private int bombNumber;
     private final int bombBagCapacity;
-    private final long invisibilityTime;
+    private boolean invincibility;
+    private Timer timerInvincibility;
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
@@ -33,7 +35,7 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
         bombRange = 1;
         bombNumber = 0;
         bombBagCapacity = game.configuration().bombBagCapacity();
-        invisibilityTime = game.configuration().playerInvisibilityTime();
+        timerInvincibility = new Timer(game.configuration().playerInvisibilityTime());
     }
 
 
@@ -141,6 +143,10 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
                 doMove(direction);
             }
         }
+        getTimerInvincibility().update(now);
+        if (!getTimerInvincibility().isRunning()) {
+            setInvincibility(false);
+        }
         moveRequested = false;
     }
 
@@ -165,7 +171,13 @@ public class Player extends GameCharacter implements Movable, TakeVisitor {
     public void setBombNumber(int nbBomb) {
         this.bombNumber = nbBomb;
     }
-    public long getInvisibilityTime(){
-        return invisibilityTime;
+
+    public boolean isInvincibility() {
+        return invincibility;
     }
-}
+    public void setInvincibility(boolean choice){
+        invincibility = choice;
+    }
+    public Timer getTimerInvincibility() {
+        return timerInvincibility;
+    }}
